@@ -121,6 +121,22 @@
             background: #ddd;
             transform: scale(1.05);
         }
+        .butt {
+            font-family: "Montserrat", sans-serif;
+            background: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .butt:hover {
+            background: #ddd;
+            transform: scale(1.05);
+        }
 
         /* Footer fixo */
         footer {
@@ -141,7 +157,7 @@
             padding: 5px;
         }
         footer .social-links a {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin: 5px;
             color: white;
             text-decoration: none;
@@ -152,6 +168,27 @@
         }
 
         /* Responsividade */
+        @media (max-width: 1919px) {
+            .projects {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                padding: 0px 30px 100px;
+            }
+        }
+        @media (max-width: 1720px) {
+            .projects {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                padding: 0px 30px 100px;
+            }
+        }
+        @media (max-height: 1080px) {
+            .projects {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+                padding: 0px 30px 100px;
+            }
+        }
         @media (max-width: 1024px) {
             .projects {
                 grid-template-columns: repeat(2, 1fr);
@@ -198,48 +235,47 @@
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 1">
                 <h3>Projeto 1</h3>
                 <p>Descrição do Projeto 1</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 2">
                 <h3>Projeto 2</h3>
                 <p>Descrição do Projeto 2</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 3">
                 <h3>Projeto 3</h3>
                 <p>Descrição do Projeto 3</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 4">
                 <h3>Projeto 4</h3>
                 <p>Descrição do Projeto 4</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 5">
                 <h3>Projeto 5</h3>
                 <p>Descrição do Projeto 5</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 6">
                 <h3>Projeto 6</h3>
                 <p>Descrição do Projeto 6</p>
-                <button>Saiba mais <i class="bi bi-arrow-right baixo"></i></button>
+                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
         </section>
     </div>
 
     <!-- Footer fixo -->
     <footer>
-        <p>nxty.cc</p>
         <div class="social-links">
-            <a href="#"><i class="bi bi-globe2 baixo"></i></a>
-            <a href="#"><i class="bi bi-github baixo"></i></a>
-            <a href="#"><i class="bi bi-steam baixo"></i></a>
+            <a href="#"><i class="bi bi-globe2"></i></a>
+            <a href="#"><i class="bi bi-github"></i></a>
+            <a href="#"><i class="bi bi-steam"></i></a>
         </div>
     </footer>
 </body>
