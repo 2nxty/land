@@ -4,59 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nxty.cc</title>
-    <!-- Adicionando a fonte Montserrat do Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
         }
+
         body {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             min-height: 100vh;
-            background: url('https://raw.githubusercontent.com/2nxty/nx/refs/heads/main/docs/img/stock-teal.png') center/cover no-repeat;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: white;
-            font-family: 'Montserrat', Arial, sans-serif;
+            background: url('https://raw.githubusercontent.com/2nxty/nx/refs/heads/main/docs/img/stock-teal.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
             text-align: center;
+            position: relative;
+            transition: color 0.3s;
         }
+
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8); /* Fundo mais escuro */
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
         }
 
-        /* Header melhorado */
+        /* Header */
         header {
             width: 100%;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.2); /* Fundo escuro com transparência */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(20, 40, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: fixed;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra para efeito moderno */
-        }
-        header h1 {
-            font-size: 2rem;
-            font-weight: 400;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra no texto */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0 0 12px 12px;
         }
 
-        /* Espaçamento para o conteúdo não ficar atrás do header */
+        body.light header {
+            background: rgba(245, 245, 245, 0.7);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: #000000;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            right: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s ease, color 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark .theme-toggle {
+            background: rgba(20, 40, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        body.light .theme-toggle {
+            background: rgba(245, 245, 245, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #000000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        body.dark .theme-toggle:hover {
+            background: rgba(20, 40, 40, 0.9);
+        }
+
+        body.light .theme-toggle:hover {
+            background: rgba(245, 245, 245, 0.9);
+        }
+
+        /* Conteúdo */
         .content {
-            margin-top: 100px; /* Ajuste conforme a altura do header */
+            margin-top: 100px;
             flex-grow: 1;
             width: 100%;
         }
@@ -69,133 +119,144 @@
             grid-row-gap: 15px;
             max-width: 1280px;
             margin: 0 auto;
+            padding: 0 30px 100px;
         }
+
         .project {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
+            background: rgba(20, 40, 40, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             padding: 20px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
             align-items: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        body.light .project {
+            background: rgba(245, 245, 245, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #000000;
+        }
+
         .project:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
+
         .project img {
             width: 100%;
             border-radius: 10px;
             aspect-ratio: 16/9;
             object-fit: cover;
         }
+
         .project h3 {
             margin: 15px 0 10px;
             font-size: 1.3rem;
             font-weight: 500;
         }
+
         .project p {
             font-size: 0.95rem;
             margin-bottom: 15px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #d0d0d0;
         }
+
+        body.light .project p {
+            color: #666666;
+        }
+
         i.baixo {
             position: relative;
             top: 1px;
         }
-        .project button {
-            font-family: "Montserrat", sans-serif;
-            background: white;
-            color: black;
+
+        .project .butt {
+            background: #007bff;
+            color: #ffffff;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 36px;
             border-radius: 10px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
+            transition: background 0.3s, transform 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .project button:hover {
-            background: #ddd;
-            transform: scale(1.05);
-        }
-        .butt {
-            font-family: "Montserrat", sans-serif;
-            background: white;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-        .butt:hover {
-            background: #ddd;
+
+        .project .butt:hover {
+            background: #0056b3;
             transform: scale(1.05);
         }
 
-        /* Footer fixo */
+        /* Footer */
         footer {
             width: 100%;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.2); /* Fundo escuro com transparência */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            background: rgba(20, 40, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 0.9rem;
             position: fixed;
             bottom: 0;
             z-index: 1000;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3); /* Sombra para efeito moderno */
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 12px 12px 0 0;
         }
-        footer .p {
-            margin: 5px;
-            color: white;
-            padding: 5px;
+
+        body.light footer {
+            background: rgba(245, 245, 245, 0.7);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
+
         footer .social-links a {
             font-size: 1.8rem;
             margin: 5px;
-            color: white;
+            color: #d0d0d0;
             text-decoration: none;
             transition: color 0.3s ease;
         }
+
+        body.light footer .social-links a {
+            color: #666666;
+        }
+
         footer .social-links a:hover {
-            color: #00bcd4; /* Cor ao passar o mouse */
+            
         }
 
         /* Responsividade */
         @media (max-width: 1919px) {
             .projects {
                 grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                padding: 0px 30px 100px;
             }
         }
+
         @media (max-width: 1720px) {
             .projects {
                 grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                padding: 0px 30px 100px;
             }
         }
+
         @media (max-height: 1080px) {
             .projects {
                 grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(2, 1fr);
-                padding: 0px 30px 100px;
             }
         }
+
         @media (max-width: 1024px) {
             .projects {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(3, 1fr);
-                padding: 0px 30px 100px;
             }
         }
+
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.8rem;
@@ -203,80 +264,94 @@
             .projects {
                 grid-template-columns: 1fr;
                 grid-template-rows: repeat(6, 1fr);
-                padding: 0px 20px 100px;
-            }
-            footer {
-                flex-direction: column;
-                text-align: center;
-            }
-            footer .social-links {
-                margin-top: 5px;
+                padding: 0 20px 100px;
             }
         }
+
         @media (max-width: 480px) {
             .projects {
-                padding: 0px 10px 100px;
+                padding: 0 10px 100px;
             }
         }
     </style>
 </head>
-<body>
+<body class="dark">
     <div class="overlay"></div>
 
-    <!-- Header melhorado -->
+    <!-- Header -->
     <header>
-        <h1>nxty [under construction]</h1>
+        <h1>nxty projects</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">Light</button>
     </header>
 
     <!-- Conteúdo principal -->
     <div class="content">
         <section class="projects">
             <div class="project">
-                <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 1">
-                <h3>Projeto 1</h3>
-                <p>Descrição do Projeto 1</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+                <img src="pimg/dlsky.jpg">
+                <h3>BSKYDL</h3>
+                <p>App to download BlueSky videos.</p>
+                <a class="butt" href="https://bskydl.top" target="_blank">Website <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
-                <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 2">
-                <h3>Projeto 2</h3>
-                <p>Descrição do Projeto 2</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+                <img src="pimg/nxtylvl.jpg">
+                <h3>NXTYLVL Games</h3>
+                <p>Game searcher project.</p>
+                <a class="butt" href="https://lvl.nxty.cc" target="_blank">Website <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
-                <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 3">
-                <h3>Projeto 3</h3>
-                <p>Descrição do Projeto 3</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+                <img src="pimg/s2.jpg">
+                <h3>Music Player</h3>
+                <p>Modern music player project.</p>
+                <a class="butt" href="https://s2.rip" target="_blank">Preview <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
-                <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 4">
-                <h3>Projeto 4</h3>
-                <p>Descrição do Projeto 4</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+                <img src="pimg/hydraos.jpg">
+                <h3>HydraOS</h3>
+                <p>A full modified theme for Hydra Launcher.</p>
+                <a class="butt" href="https://hydrathemes.shop/" target="_blank">Hydra Themes <i class="bi bi-arrow-right baixo"></i></a>
             </div>
-            <div class="project">
+            <!--div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 5">
                 <h3>Projeto 5</h3>
                 <p>Descrição do Projeto 5</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+                <a class="butt" href="#" target="_blank">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
             </div>
             <div class="project">
                 <img src="https://cdn.pixabay.com/photo/2017/10/26/17/51/under-construction-2891888_1280.jpg" alt="Projeto 6">
                 <h3>Projeto 6</h3>
                 <p>Descrição do Projeto 6</p>
-                <a class="butt">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
-            </div>
+                <a class="butt" href="#" target="_blank">Saiba mais <i class="bi bi-arrow-right baixo"></i></a>
+            </div-->
         </section>
     </div>
 
-    <!-- Footer fixo -->
+    <!-- Footer -->
     <footer>
         <div class="social-links">
-            <a href="#"><i class="bi bi-globe2"></i></a>
-            <a href="#"><i class="bi bi-github"></i></a>
-            <a href="#"><i class="bi bi-steam"></i></a>
+            <!--a href="https://s2.rip" target="_blank"><i class="bi bi-globe2"></i></a-->
+            <a href="https://github.com/2nxty" target="_blank"><i class="bi bi-github"></i></a>
+            <a href="https://steamcommunity.com/id/2nxty" target="_blank"><i class="bi bi-steam"></i></a>
         </div>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                button.textContent = 'Dark';
+                body.style.backgroundImage = "url('https://raw.githubusercontent.com/2nxty/nx/refs/heads/main/docs/img/stock-white.png')";
+            } else {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                button.textContent = 'Light';
+                body.style.backgroundImage = "url('https://raw.githubusercontent.com/2nxty/nx/refs/heads/main/docs/img/stock-teal.png')";
+            }
+        }
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91d396453e131389',t:'MTc0MTQ1MDA2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
