@@ -1,368 +1,686 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nxty.cc</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+        :root[data-theme="dark"] {
+            --bg:        #0b0b0f;
+            --surface:   #13131a;
+            --surface2:  #1c1c26;
+            --border:    rgba(255,255,255,0.07);
+            --border-hover: rgba(255,255,255,0.15);
+            --text:      #e2e2ee;
+            --text-dim:  #666680;
+            --text-mid:  #9999b8;
+            --accent:    #4fffb0;
+            --accent-dim:rgba(79,255,176,0.12);
+            --dot:       rgba(255,255,255,0.04);
+            --shadow:    0 8px 32px rgba(0,0,0,0.6);
+            --bar-bg:    rgba(13,13,20,0.85);
         }
+        :root[data-theme="light"] {
+            --bg:        #f0f0f5;
+            --surface:   #ffffff;
+            --surface2:  #f7f7fb;
+            --border:    rgba(0,0,0,0.07);
+            --border-hover: rgba(0,0,0,0.18);
+            --text:      #0e0e18;
+            --text-dim:  #aaaabc;
+            --text-mid:  #55556e;
+            --accent:    #0055ff;
+            --accent-dim:rgba(0,85,255,0.08);
+            --dot:       rgba(0,0,0,0.05);
+            --shadow:    0 8px 32px rgba(0,0,0,0.1);
+            --bar-bg:    rgba(240,240,245,0.85);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
 
         body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 100vh;
-            background: url('img/stock-teal.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #e0e0e0;
-            text-align: center;
-            position: relative;
-            transition: color 0.3s;
+            overflow-x: hidden;
+            transition: background 0.35s, color 0.35s;
         }
 
-        .overlay {
+        /* dot-grid background */
+        body::before {
+            content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            inset: 0;
+            background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
             z-index: 0;
+            transition: opacity 0.35s;
         }
 
-        /* Header */
-        header {
-            width: 100%;
-            padding: 20px;
-            background: rgba(20, 40, 40, 0.7);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* ── MENU BAR ── */
+        .menubar {
             position: fixed;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            top: 0; left: 0; right: 0;
+            height: 44px;
+            background: var(--bar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            justify-content: center;
             align-items: center;
-            border-radius: 0 0 12px 12px;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-mid);
         }
 
-        body.light header {
-            background: rgba(245, 245, 245, 0.7);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            color: #000000;
+        .menubar-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
-        header h1 {
-            font-size: 2rem;
-            font-weight: 500;
+        .menubar-brand {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: 0.02em;
         }
 
-        .theme-toggle {
-            position: absolute;
-            right: 20px;
-            padding: 8px 16px;
-            border-radius: 20px;
+        .menubar-nav {
+            display: flex;
+            gap: 18px;
+        }
+
+        .menubar-nav span {
+            cursor: default;
+            opacity: 0.5;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+        }
+
+        .menubar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        .clock {
+            font-size: 11px;
+            letter-spacing: 0.03em;
+        }
+
+        .theme-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 28px; height: 28px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.3s, transform 0.2s ease, color 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
 
-        body.dark .theme-toggle {
-            background: rgba(20, 40, 40, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        .theme-btn:hover {
+            background: var(--surface);
+            border-color: var(--border-hover);
+            transform: scale(1.08);
         }
 
-        body.light .theme-toggle {
-            background: rgba(245, 245, 245, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: #000000;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.05);
-        }
-
-        body.dark .theme-toggle:hover {
-            background: rgba(20, 40, 40, 0.9);
-        }
-
-        body.light .theme-toggle:hover {
-            background: rgba(245, 245, 245, 0.9);
-        }
-
-        /* Conteúdo */
-        .content {
-            margin-top: 100px;
-            flex-grow: 1;
+        /* ── MAIN ── */
+        main {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            padding: 80px 24px 100px;
+            max-width: 1100px;
+            margin: 0 auto;
             width: 100%;
         }
 
-        .projects {
+        /* Hero */
+        .hero {
+            padding: 36px 0 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .hero-window {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: var(--shadow);
+        }
+
+        .window-bar {
+            height: 36px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 8px;
+        }
+
+        .w-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+        .w-dot.red   { background: #ff5f57; }
+        .w-dot.yellow{ background: #febc2e; }
+        .w-dot.green { background: #28c840; }
+
+        .window-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+        }
+
+        .window-body {
+            padding: 32px 36px 36px;
+        }
+
+        .hero-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-label::before {
+            content: '';
+            display: inline-block;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        .hero-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .hero-name span {
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 14px;
+            color: var(--text-mid);
+            line-height: 1.7;
+            max-width: 480px;
+        }
+
+        /* section label */
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── PROJECTS GRID ── */
+        .projects-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            grid-column-gap: 15px;
-            grid-row-gap: 15px;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 30px 100px;
+            gap: 12px;
+            margin-bottom: 48px;
         }
 
-        .project {
-            background: rgba(20, 40, 40, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            backdrop-filter: blur(15px);
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: default;
+            box-shadow: var(--shadow);
+        }
+
+        .project-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+        }
+
+        .card-titlebar {
+            height: 32px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
             align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 0 12px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
-        body.light .project {
-            background: rgba(245, 245, 245, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: #000000;
+        .card-titlebar .w-dot { width: 8px; height: 8px; }
+
+        .card-wintitle {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+            text-align: center;
         }
 
-        .project:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .project img {
+        .card-img {
             width: 100%;
-            border-radius: 10px;
             aspect-ratio: 16/9;
             object-fit: cover;
+            display: block;
+            border-bottom: 1px solid var(--border);
         }
 
-        .project h3 {
-            margin: 15px 0 10px;
-            font-size: 1.3rem;
-            font-weight: 500;
+        .card-body {
+            padding: 18px 18px 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 6px;
         }
 
-        .project p {
-            font-size: 0.95rem;
-            margin-bottom: 15px;
-            color: #d0d0d0;
+        .card-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.7;
         }
 
-        body.light .project p {
-            color: #666666;
+        .card-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            letter-spacing: -0.01em;
         }
 
-        i.baixo {
-            position: relative;
-            top: 1px;
+        .card-desc {
+            font-size: 12px;
+            color: var(--text-mid);
+            line-height: 1.6;
+            flex: 1;
         }
 
-        .project .butt {
-            background: #007bff;
-            color: #ffffff;
-            border: none;
-            padding: 12px 36px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s ease;
-            font-family: 'Montserrat', sans-serif;
+        .card-footer {
+            padding: 0 18px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            letter-spacing: 0.04em;
+            padding: 7px 14px;
+            border: 1px solid var(--accent-dim);
+            border-radius: 8px;
+            background: var(--accent-dim);
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
 
-        .project .butt:hover {
-            background: #0056b3;
-            transform: scale(1.05);
+        .card-link:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg);
+            transform: scale(1.04);
         }
 
-        /* Footer */
-        footer {
-            width: 100%;
-            padding: 10px 20px;
-            background: rgba(20, 40, 40, 0.7);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
+        .card-link i { font-size: 12px; }
+
+        /* ── DOCK ── */
+        .dock {
             position: fixed;
-            bottom: 0;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1000;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
-            border-radius: 12px 12px 0 0;
+            background: var(--bar-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow);
         }
 
-        body.light footer {
-            background: rgba(245, 245, 245, 0.7);
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        .dock-sep {
+            width: 1px;
+            height: 28px;
+            background: var(--border);
+            margin: 0 6px;
         }
 
-        footer .social-links a {
-            font-size: 1.8rem;
-            margin: 5px;
-            color: #d0d0d0;
+        .dock-item {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            color: var(--text-mid);
             text-decoration: none;
-            transition: color 0.3s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, transform 0.15s;
+            position: relative;
         }
 
-        body.light footer .social-links a {
-            color: #666666;
+        .dock-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+            transform: translateY(-4px) scale(1.12);
         }
 
-        footer .social-links a:hover {
-            
+        .dock-item.active {
+            color: var(--text);
         }
 
-        /* Responsividade */
-        @media (max-width: 1919px) {
-            .projects {
-                grid-template-columns: repeat(3, 1fr);
+        .dock-item .dock-tip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .dock-item:hover .dock-tip { opacity: 1; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 800px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+            .menubar-nav { display: none; }
+            .window-body { padding: 24px 22px 28px; }
         }
 
-        @media (max-width: 1720px) {
-            .projects {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-height: 1080px) {
-            .projects {
-                grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(1, 1fr);
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .projects {
-                grid-template-columns: repeat(3, 1fr);
-                grid-template-rows: repeat(1, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-            .projects {
+        @media (max-width: 540px) {
+            .projects-grid {
                 grid-template-columns: 1fr;
-                grid-template-rows: repeat(1, 1fr);
-                padding: 0 20px 100px;
             }
+            main {
+                padding: 70px 14px 90px;
+            }
+            .hero { padding: 24px 0 28px; }
+            .hero-name { font-size: 2.2rem; }
+            .dock { padding: 8px 14px; gap: 2px; }
+            .dock-item { width: 36px; height: 36px; font-size: 16px; border-radius: 10px; }
         }
 
-        @media (max-width: 480px) {
-            .projects {
-                padding: 0 10px 100px;
-            }
+        /* scroll */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--surface2) var(--bg);
+        }
+        *::-webkit-scrollbar { width: 6px; }
+        *::-webkit-scrollbar-track { background: var(--bg); }
+        *::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 6px; }
+
+        /* entrance animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== Scrollbar CSS ===== */
-      /* Firefox */
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: #007070 #0c1a1a;
-      }
+        .hero-window {
+            animation: fadeUp 0.5s ease both;
+            animation-delay: 0.05s;
+        }
 
-      /* Chrome, Edge, and Safari */
-      *::-webkit-scrollbar {
-        width: 15px;
-      }
-
-      *::-webkit-scrollbar-track {
-        background: #0c1a1a;
-      }
-
-      *::-webkit-scrollbar-thumb {
-        background-color: #007070;
-        border-radius: 10px;
-        border: 0px solid #ffffff;
-      }
+        .project-card {
+            animation: fadeUp 0.5s ease both;
+        }
+        .project-card:nth-child(1) { animation-delay: 0.10s; }
+        .project-card:nth-child(2) { animation-delay: 0.16s; }
+        .project-card:nth-child(3) { animation-delay: 0.22s; }
+        .project-card:nth-child(4) { animation-delay: 0.28s; }
+        .project-card:nth-child(5) { animation-delay: 0.34s; }
     </style>
 </head>
-<body class="dark">
-    <div class="overlay"></div>
+<body>
 
-    <!-- Header -->
-    <header>
-        <h1>nxty.</h1>
-        <button class="theme-toggle" onclick="toggleTheme()">Light</button>
-    </header>
-
-    <!-- Conteúdo principal -->
-    <div class="content">
-        <section class="projects">
-            <div class="project">
-                <img src="pimg/gzon.jpg">
-                <h3>GamesZ.one</h3>
-                <p>Game searcher project.</p>
-                <a class="butt" href="https://gamesz.one" target="_blank">Website <i class="bi bi-arrow-right baixo"></i></a>
-            </div>
-            <div class="project">
-                <img src="pimg/s2rip.jpg">
-                <h3>S2 BIO</h3>
-                <p>Custom Bio Links Concept.</p>
-                <a class="butt" href="https://s2.rip/" target="_blank">Preview <i class="bi bi-arrow-right baixo"></i></a>
-            </div>
-            <div class="project">
-                <img src="pimg/chx.jpg">
-                <h3>CHX.lol</h3>
-                <p>Web based Crosshair Overlay.</p>
-                <a class="butt" href="https://chx.lol/" target="_blank">Website <i class="bi bi-arrow-right baixo"></i></a>
-            </div>
-            <div class="project">
-                <img src="pimg/dh.jpg">
-                <h3>Dolar Hoje</h3>
-                <p>Dollar price in BRL.</p>
-                <a class="butt" href="https://dolarhoje.nxty.cc/" target="_blank">Website <i class="bi bi-arrow-right baixo"></i></a>
-            </div>
-        </section>
+    <!-- MENU BAR -->
+    <div class="menubar">
+        <div class="menubar-left">
+            <span class="menubar-brand">nxty.cc</span>
+            <!--div class="menubar-nav">
+                <span>Projects</span>
+                <span>About</span>
+                <span>Contact</span>
+            </div-->
+        </div>
+        <div class="menubar-right">
+            <div class="status-dot"></div>
+            <span class="clock" id="clock">--:--</span>
+            <button class="theme-btn" id="themeBtn" title="Toggle theme">
+                <i class="bi bi-moon-fill" id="themeIcon"></i>
+            </button>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="social-links">
-            <!--a href="https://s2.rip" target="_blank"><i class="bi bi-globe2"></i></a-->
-            <a href="https://github.com/2nxty" target="_blank"><i class="bi bi-github"></i></a>
-            <a href="https://steamcommunity.com/id/2nxty" target="_blank"><i class="bi bi-steam"></i></a>
+    <!-- MAIN -->
+    <main>
+
+        <!-- Hero window -->
+        <div class="hero">
+            <div class="hero-window">
+                <div class="window-bar">
+                    <div class="w-dot red"></div>
+                    <div class="w-dot yellow"></div>
+                    <div class="w-dot green"></div>
+                    <span class="window-title">~/nxty — about.md</span>
+                </div>
+                <div class="window-body">
+                    <div class="hero-label">available for work</div>
+                    <h1 class="hero-name">nxty<span>.</span></h1>
+                    <p class="hero-desc">Developer & designer building clean, functional web experiences. Focused on minimal interfaces and thoughtful interactions.</p>
+                </div>
+            </div>
         </div>
-    </footer>
+
+        <!-- Projects -->
+        <div class="section-label">projects</div>
+        <div class="projects-grid">
+
+            <div class="project-card">
+                <div class="card-titlebar">
+                    <div class="w-dot red"></div>
+                    <div class="w-dot yellow"></div>
+                    <div class="w-dot green"></div>
+                    <span class="card-wintitle">gmsz.one</span>
+                </div>
+                <img class="card-img" src="pimg/gzon.jpg" alt="GamesZ.one">
+                <div class="card-body">
+                    <div class="card-tag">web app</div>
+                    <div class="card-title">GamesZ.one</div>
+                    <div class="card-desc">Game searcher project with a clean browsing interface.</div>
+                </div>
+                <div class="card-footer">
+                    <a class="card-link" href="https://gmsz.one" target="_blank">
+                        Open <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-titlebar">
+                    <div class="w-dot red"></div>
+                    <div class="w-dot yellow"></div>
+                    <div class="w-dot green"></div>
+                    <span class="card-wintitle">s2.rip</span>
+                </div>
+                <img class="card-img" src="pimg/s2rip.jpg" alt="S2 BIO">
+                <div class="card-body">
+                    <div class="card-tag">concept</div>
+                    <div class="card-title">S2 BIO</div>
+                    <div class="card-desc">Custom bio link page concept with a personal aesthetic.</div>
+                </div>
+                <div class="card-footer">
+                    <a class="card-link" href="https://s2.rip/" target="_blank">
+                        Preview <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-titlebar">
+                    <div class="w-dot red"></div>
+                    <div class="w-dot yellow"></div>
+                    <div class="w-dot green"></div>
+                    <span class="card-wintitle">hylauncher.net</span>
+                </div>
+                <img class="card-img" src="pimg/hl.jpg" alt="HyLauncher">
+                <div class="card-body">
+                    <div class="card-tag">desktop</div>
+                    <div class="card-title">HyLauncher</div>
+                    <div class="card-desc">Alternative launcher for Hytale.</div>
+                </div>
+                <div class="card-footer">
+                    <a class="card-link" href="https://hylauncher.net/" target="_blank">
+                        Open <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="card-titlebar">
+                    <div class="w-dot red"></div>
+                    <div class="w-dot yellow"></div>
+                    <div class="w-dot green"></div>
+                    <span class="card-wintitle">dolarhoje.nxty.cc</span>
+                </div>
+                <img class="card-img" src="pimg/dh.jpg" alt="Dolar Hoje">
+                <div class="card-body">
+                    <div class="card-tag">utility</div>
+                    <div class="card-title">Dolar Hoje</div>
+                    <div class="card-desc">Live USD to BRL exchange rate tracker.</div>
+                </div>
+                <div class="card-footer">
+                    <a class="card-link" href="https://dolarhoje.nxty.cc/" target="_blank">
+                        Open <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- DOCK -->
+    <div class="dock">
+        <a class="dock-item" href="https://github.com/2nxty" target="_blank">
+            <i class="bi bi-github"></i>
+            <span class="dock-tip">GitHub</span>
+        </a>
+        <a class="dock-item" href="https://steamcommunity.com/id/2nxty" target="_blank">
+            <i class="bi bi-steam"></i>
+            <span class="dock-tip">Steam</span>
+        </a>
+        <!--div class="dock-sep"></div>
+        <a class="dock-item" href="mailto:nxty@nxty.cc">
+            <i class="bi bi-envelope"></i>
+            <span class="dock-tip">Email</span>
+        </a-->
+    </div>
 
     <script>
-        function toggleTheme() {
-            const body = document.body;
-            const button = document.querySelector('.theme-toggle');
-            if (body.classList.contains('dark')) {
-                body.classList.remove('dark');
-                body.classList.add('light');
-                button.textContent = 'Dark';
-                body.style.backgroundImage = "url('img/stock-white.png')";
-            } else {
-                body.classList.remove('light');
-                body.classList.add('dark');
-                button.textContent = 'Light';
-                body.style.backgroundImage = "url('img/stock-teal.png')";
-            }
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2,'0');
+            const m = String(now.getMinutes()).padStart(2,'0');
+            document.getElementById('clock').textContent = h + ':' + m;
         }
+        updateClock();
+        setInterval(updateClock, 10000);
+
+        // Theme
+        const html = document.documentElement;
+        const btn  = document.getElementById('themeBtn');
+        const icon = document.getElementById('themeIcon');
+
+        function setTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            icon.className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+            localStorage.setItem('theme', theme);
+        }
+
+        btn.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // restore saved
+        const saved = localStorage.getItem('theme') || 'dark';
+        setTheme(saved);
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91d396453e131389',t:'MTc0MTQ1MDA2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
